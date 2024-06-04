@@ -1,0 +1,12 @@
+API:
+
+RERANK API:
+
+    Receive: JSON with "hits" and "query", each 'hit' with
+
+        qid     : ?int
+        docid   : !string
+        content : !string
+        score   : !int|float
+    
+    Return: Same as Receive
