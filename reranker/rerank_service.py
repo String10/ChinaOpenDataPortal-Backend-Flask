@@ -4,9 +4,9 @@ from .result import Result
 from .rankllm import PromptMode
 
 from utils.config import (
-    RERANK_API_MODEL,
-    RERANK_API_BASE,
-    RERANK_API_KEYS,
+    LLM_API_MODEL,
+    LLM_API_BASE,
+    LLM_API_KEYS,
     RERANK_STEP_SIZE,
     RERANK_WINDOW_SIZE,
 )
@@ -20,12 +20,12 @@ print_prompts_responses = False
 
 
 agent = Zhipuai(
-    model=RERANK_API_MODEL,
+    model=LLM_API_MODEL,
     context_size=4096,
     prompt_mode=PromptMode.RANK_GPT,
     num_few_shot_examples=0,
-    keys=RERANK_API_KEYS,
-    api_base=RERANK_API_BASE,
+    keys=LLM_API_KEYS,
+    api_base=LLM_API_BASE,
 )
 
 
