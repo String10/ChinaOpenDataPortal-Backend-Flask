@@ -11,3 +11,6 @@ LLM_API_KEYS = os.getenv("LLM_API_KEYS").split(",")
 
 RERANK_WINDOW_SIZE = int(os.getenv("RERANK_WINDOW_SIZE"))
 RERANK_STEP_SIZE = int(os.getenv("RERANK_STEP_SIZE"))
+
+CACHE_DIR = os.getenv("CACHE_DIR")
+CACHE_TIMEOUT = int(os.getenv("CACHE_TIMEOUT"))
