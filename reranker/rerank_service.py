@@ -9,7 +9,11 @@ from utils.config import (
     LLM_API_KEYS,
     RERANK_STEP_SIZE,
     RERANK_WINDOW_SIZE,
+    TB_DESCRIPTIONS,
+    TB_DESCRIPTIONS_ID,
+    TB_DESCRIPTIONS_DESC,
 )
+from utils.database import fetch_as_dict
 
 num_passes = 1
 top_k_candidates = 20
@@ -32,12 +36,19 @@ agent = Zhipuai(
 def rerank_results(query: str, results: "list[dict]"):
     results = sorted(results, key=lambda x: x["score"], reverse=True)
 
+    descriptions = [
+        fetch_as_dict(
+            f'SELECT * FROM {TB_DESCRIPTIONS} WHERE {TB_DESCRIPTIONS_ID} = {res["datasetid"]}'
+        )[0]
+        for res in results
+    ]
+
     retrieved_results = [
         Result(
             query=query,
             hits=[
                 {
-                    "content": f'{res["content"]}',
+                    "content": f'{res["content"]}: {descriptions[i][TB_DESCRIPTIONS_DESC]}',
                     "qid": 1,  # any number is fine
                     "docid": res["docid"],
                     "rank": i + 1,
@@ -64,5 +75,5 @@ def rerank_results(query: str, results: "list[dict]"):
             retrieved_results = rerank_results
             for r in retrieved_results:
                 r.ranking_exec_summary = None
-    
+
     return rerank_results
