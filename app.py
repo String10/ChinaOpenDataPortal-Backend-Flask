@@ -25,8 +25,22 @@ def hello_world():
 @app.route("/apis/rerank", methods=["POST"])
 def rerank_api():
     data = request.get_json()
-    results = rerank_results(data["query"], data["hits"])
-    return results[0].to_dict()
+
+    datasetids = sorted([hit["datasetid"] for hit in data["hits"]])
+    cache_key = (
+        "rerank-%s"
+        % sha256(
+            f'{data["query"]}-{"-".join(map(str, datasetids))}'.encode()
+        ).hexdigest()
+    )
+    results = cache.get(cache_key)
+    if results is not None:
+        return results
+
+    results = rerank_results(data["query"], data["hits"])[0]
+    if results.hits is not None and len(results.hits) >= len(data["hits"]):
+        cache.set(cache_key, results.to_dict())
+    return results.to_dict()
 
 
 @app.route("/apis/explain", methods=["POST"])

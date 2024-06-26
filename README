@@ -6,6 +6,7 @@ RERANK API:
 
         qid     : ?int
         docid   : !string
+        datasetid: !string
         content : !string
         score   : !int|float
     
