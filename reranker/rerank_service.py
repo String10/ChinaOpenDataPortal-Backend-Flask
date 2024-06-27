@@ -37,10 +37,13 @@ def rerank_results(query: str, results: "list[dict]"):
     results = sorted(results, key=lambda x: x["score"], reverse=True)
 
     descriptions = [
-        fetch_as_dict(
-            f'SELECT * FROM {TB_DESCRIPTIONS} WHERE {TB_DESCRIPTIONS_ID} = {res["datasetid"]}'
-        )[0]
-        for res in results
+        lst[0] if len(lst) > 0 else {TB_DESCRIPTIONS_DESC: ""}
+        for lst in [
+            fetch_as_dict(
+                f'SELECT * FROM {TB_DESCRIPTIONS} WHERE {TB_DESCRIPTIONS_ID} = {res["datasetid"]}'
+            )
+            for res in results
+        ]
     ]
 
     retrieved_results = [
